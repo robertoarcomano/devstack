@@ -1,0 +1,31 @@
+#cloud-config
+ssh_pwauth: true
+disable_root: false
+chpasswd:
+  list: |
+    root:password123
+  expire: False
+package_update: true
+package_upgrade: true
+
+write_files:
+  - path: /etc/netplan/50-cloud-init.yaml
+    permissions: '0600'
+    content: |
+      network:
+        version: 2
+        ethernets:
+          enp1s0:
+            dhcp4: false
+            addresses: [192.168.122.200/24]
+            routes:
+              - to: default
+                via: 192.168.122.1
+            nameservers:
+              addresses: [8.8.8.8, 8.8.4.4]
+
+runcmd:
+  - netplan apply
+  - apt update
+  - sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+  - systemctl restart ssh
