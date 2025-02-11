@@ -19,19 +19,6 @@ if [ ! -f "$IMG_PATH/$ORIG_IMG" ]; then
 fi
 sudo cp $IMG_PATH/$ORIG_IMG $IMG_PATH/$CURR_IMG
 
-echo virt-install \
-       --name $VM \
-       --memory $RAM \
-       --vcpus $CPU \
-       --graphics none \
-       --os-variant $OS \
-       --import \
-       --disk path=$IMG_PATH/$CURR_IMG,format=qcow2 \
-       --graphics none \
-       --console pty,target_type=virtio \
-       --serial pty \
-       --cloud-init user-data=./user-data,meta-data=./meta-data
-
 virt-install \
   --name $VM \
   --memory $RAM \
